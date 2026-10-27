@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 232 70% 2%;
+    --foreground: 196 100% 95%;
+    --card: 215 60% 7%;
+    --card-foreground: 196 100% 95%;
+    --primary: 187 100% 50%;
+    --primary-foreground: 232 70% 4%;
+    --secondary: 215 40% 12%;
+    --secondary-foreground: 196 100% 95%;
+    --muted: 215 40% 11%;
+    --muted-foreground: 208 22% 54%;
+    --accent: 187 60% 14%;
+    --accent-foreground: 187 100% 80%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 187 70% 20%;
+    --input: 187 70% 26%;
+    --ring: 187 100% 50%;
+    --radius: 0.9rem;
+  }
+  * { @apply border-border; -webkit-tap-highlight-color: transparent; }
+  html, body, #root { height: 100%; }
+  body {
+    @apply bg-background font-mono text-foreground antialiased;
+    background-image:
+      radial-gradient(ellipse 70% 50% at 50% 0%, hsl(187 100% 50% / 0.10), transparent 70%),
+      linear-gradient(hsl(187 100% 50% / 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(187 100% 50% / 0.035) 1px, transparent 1px);
+    background-size: auto, 32px 32px, 32px 32px;
+    overscroll-behavior: none;
+  }
+}
+@layer utilities {
+  .pb-safe { padding-bottom: max(0.75rem, env(safe-area-inset-bottom)); }
+  .pt-safe { padding-top: max(0.75rem, env(safe-area-inset-top)); }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+}

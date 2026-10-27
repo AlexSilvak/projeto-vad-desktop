@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <title>Orb Showcase</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Permite arrastar a janela do Electron ao clicar fora da zona interativa */
+    .drag-region {
+      position: absolute;
+      inset: 0;
+      -webkit-app-region: drag;
+    }
+
+    /* Impede o arrasto no botão da bola para permitir o clique funcional */
+    .orb-box {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-app-region: no-drag; /* Permite clique no Electron */
+      z-index: 10;
+    }
+
+    /* Esfera Principal */
+    .orb {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 50% 50%, #00f0ff 0%, #005f73 60%, #03080e 100%);
+      border: 2px solid #00f0ff;
+      box-shadow: 0 0 30px #00f0ff, inset 0 0 18px #00f0ff;
+      position: relative;
+      transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    /* Anel Tracejado Exterior */
+    .orb::after {
+      content: '';
+      position: absolute;
+      top: -10px; left: -10px; right: -10px; bottom: -10px;
+      border-radius: 50%;
+      border: 1.5px dashed #00f0ff;
+      animation: rotate 12s linear infinite;
+      transition: border-color 0.4s ease;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Estado Ativo (Ouvindo) */
+    .orb-box.listening .orb {
+      background: radial-gradient(circle at 50% 50%, #ff0055 0%, #7a0026 60%, #03080e 100%);
+      border-color: #ff0055;
+      box-shadow: 0 0 45px #ff0055, inset 0 0 25px #ff0055;
+      animation: pulse 1.2s infinite alternate ease-in-out;
+    }
+
+    .orb-box.listening .orb::after {
+      border-color: #ff0055;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 30px #ff0055, inset 0 0 15px #ff0055;
+      }
+      100% {
+        transform: scale(1.08);
+        box-shadow: 0 0 55px #ff0055, inset 0 0 30px #ff0055;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Região de Arraste da Janela -->
+  <div class="drag-region"></div>
+
+  <!-- Bola Interativa -->
+  <div class="orb-box" id="orbBox" title="Clique no centro para ativar a voz">
+    <div class="orb"></div>
+  </div>
+
+  <script>
+    const orbBox = document.getElementById('orbBox');
+    let isListening = false;
+    let recognition;
+
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.lang = 'pt-PT';
+      recognition.continuous = false;
+
+      recognition.onstart = () => {
+        isListening = true;
+        orbBox.classList.add('listening');
+      };
+
+      recognition.onerror = () => stopListening();
+      recognition.onend = () => stopListening();
+    }
+
+    orbBox.addEventListener('click', () => {
+      if (!recognition) {
+        isListening = !isListening;
+        orbBox.classList.toggle('listening', isListening);
+        return;
+      }
+
+      if (isListening) {
+        recognition.stop();
+      } else {
+        recognition.start();
+      }
+    });
+
+    function stopListening() {
+      isListening = false;
+      orbBox.classList.remove('listening');
+    }
+  </script>
+</body>
+</html>
