@@ -1,5 +1,6 @@
 
-<img width="1905" height="1074" alt="image" src="https://github.com/user-attachments/assets/51d374f0-eee4-4cc8-ba98-480719d61f8a" />
+<img width="1884" height="1067" alt="image" src="https://github.com/user-attachments/assets/f21bf39a-1a42-4b74-9ae6-c82ff201583a" />
+
 
 
 # Projeto Vale — Conversação por Voz em Tempo Real (VAD + Whisper + Ollama)
